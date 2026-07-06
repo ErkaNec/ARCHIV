@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="connect-src *;">
-  <link rel="icon" type="image/x-icon" href="https://erkanec.github.io/ARCHIV/icon.ico">
+  <link rel="icon" type="image/x-icon" href="https://github.io">
   <title>ARCHIV</title>
   <script type="importmap">
     {
@@ -83,6 +83,7 @@
       const el = document.getElementById('loading');
       el.classList.add('hidden');
       setTimeout(() => el.remove(), 500);
+      
     },
   });
 
@@ -106,6 +107,9 @@
       mp.setAdminPass(pass);
     },
   });
+
+  document.title = "ARCHIV";
+  
 </script>
 
 <style>
