@@ -48,9 +48,14 @@
 
 <h1>ARCHIV</h1>
 
-<button onclick="window.location.href='https://erkanec.github.io/ARCHIV/vesnice/'">
-  START
-</button>
+<button onclick="startGame()">START</button>
+
+<script>
+  function startGame() {
+    localStorage.setItem("audioEnabled", "true");
+    window.location.href = "https://erkanec.github.io/ARCHIV/mesto/";
+  }
+</script>
 
 </body>
 </html>
