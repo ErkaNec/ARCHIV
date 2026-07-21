@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="connect-src *;">
+  <link rel="icon" type="image/x-icon" href="https://spelecanton.github.io/Expore/favicon.ico">
+  <title>EXPORE</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+
+<div id="loading">
+  <div>Loading Map…</div>
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+</div>
+<div id="fade"></div>
+<canvas id="c"></canvas>
+
+<script type="module">
+  import { initEngine }        from 'https://spelecanton.github.io/Expore/javascript/engine.js';
+  import { createMultiplayer } from 'https://spelecanton.github.io/Expore/javascript/multiplayer.js';
+  import { createChatOverlay } from 'https://spelecanton.github.io/Expore/javascript/chat_overlay.js';
+
+  // ── 3D engine ─────────────────────────────────────────────────────────────
+  await initEngine({
+    canvas:      document.getElementById('c'),
+    mapUrl:      'oslava.expore',
+    textureBase: 'textures/',
+
+    targetFps: 0,
+
+    fogColor:       0xffffff,
+    renderDistance: 10,
+
+    bloomStrength:  0.1,
+    bloomRadius:    0.4,
+    bloomThreshold: 0.2,
+    maxPixelRatio:  1.5,
+
+    msaa: 2,
+
+    bobStrength: 0.05,
+    bobSpeed: 10,
+
+    brightness: 0.00,
+    contrast: 1.00,
+    tintRgba: [1.00, 1.00, 1.00, 0.00],
+
+    shaderTexSize: 1024,
+    shaderFps: 30,      
+    shaderFilter: 1,
+
+    stepsVolume: 1.0,  //0.0 až 1.0
+    stepsPitchVariation: 0.15,
+
+    physicsConfig: {
+      MOVE_SPEED:      100 * 0.02,
+      TURN_SPEED:      2.5,
+      LOOK_SPEED:      2.5,
+      RETURN_SPEED:    5.0,
+      GRAVITY:        -28.0,
+      JUMP_SPEED:      0.0,
+      TERMINAL_VEL:  -30.0,
+      PLAYER_HEIGHT:  50 * 0.02,
+      PLAYER_RADIUS:   0.28,
+      STEP_HEIGHT:     0.45,
+      SLOPE_MAX_ANGLE: 50,
+      SKIN_WIDTH:      0.02,
+    },
+
+    onProgress(pct) {
+      document.getElementById('progress-fill').style.width = pct + '%';
+    },
+    onReady() {
+      const el = document.getElementById('loading');
+      el.classList.add('hidden');
+      setTimeout(() => el.remove(), 500);
+    },
+  });
+
+  // ── Multiplayer ────────────────────────────────────────────────────────────
+  const mp = createMultiplayer(window._scene, {
+    playersUrl: 'https://spelec.cz/chat/players.php',
+  });
+
+  // ── Chat overlay ───────────────────────────────────────────────────────────
+  createChatOverlay({
+    apiUrl:    'https://spelec.cz/chat/api.php',
+    onlineUrl: 'https://spelec.cz/chat/online.php',
+
+    getPlayers: () => mp.getPlayers(),
+
+    onTeleport: (x, y, z) => {
+      window._physics?.teleport(window._cam, x, y, z);
+    },
+
+    onAdminPassChange: (pass) => {
+      mp.setAdminPass(pass);
+    },
+  });
+</script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; }
+  canvas { display: block; }
+
+  #loading {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #000; color: #fff;
+    font-family: "Share Tech Mono", monospace;
+    font-size: 14px; gap: 16px; z-index: 100;
+    transition: opacity 0.4s;
+  }
+  #loading.hidden { opacity: 0; pointer-events: none; }
+
+  #progress-bar {
+    width: 260px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px; overflow: hidden;
+  }
+  #progress-fill {
+    height: 100%; width: 0%;
+    background: #fff; transition: width 0.2s;
+  }
+
+  #fade {
+    position: fixed; inset: 0; background: #000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s; z-index: 50;
+  }
+  #fade.out { opacity: 1; }
+</style>
+
+</body>
+</html>
