@@ -32,7 +32,7 @@
   // ── 3D engine ─────────────────────────────────────────────────────────────
   await initEngine({
     canvas:      document.getElementById('c'),
-    mapUrl:      'klub.expore',
+    mapUrl:      'kino.expore',
     textureBase: 'textures/',
 
     targetFps: 0,
@@ -40,8 +40,8 @@
     fogColor:       0x444a01,
     renderDistance: 20,
 
-    bloomStrength:  3.1,
-    bloomRadius:    1.4,
+    bloomStrength:  0.1,
+    bloomRadius:    0.4,
     bloomThreshold: 0.2,
     maxPixelRatio:  1.5,
 
@@ -70,8 +70,8 @@
       JUMP_SPEED:      0.0,
       TERMINAL_VEL:  -30.0,
       PLAYER_HEIGHT:  50 * 0.02,
-      PLAYER_RADIUS:   0.28,
-      STEP_HEIGHT:     0.45,
+      PLAYER_RADIUS:   0.1,
+      STEP_HEIGHT:     0.0,
       SLOPE_MAX_ANGLE: 50,
       SKIN_WIDTH:      0.02,
     },
